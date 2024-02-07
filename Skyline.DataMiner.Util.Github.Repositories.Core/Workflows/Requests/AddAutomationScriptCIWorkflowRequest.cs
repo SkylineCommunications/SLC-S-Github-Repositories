@@ -26,11 +26,13 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 		/// <summary>
 		/// The Sonar Cloud Project ID retrieved from <see href="https://sonarcloud.io/"/>. 
 		/// </summary>
+		[WorkflowFileProperty]
 		public string SonarCloudProjectID { get; private set; }
 
 		/// <summary>
 		/// The DataMiner Deploy key retrieved from <see href="https://admin.dataminer.services/"/>.
 		/// </summary>
+		[WorkflowSecret]
 		public string DataMinerKey { get; private set; }
 	}
 }

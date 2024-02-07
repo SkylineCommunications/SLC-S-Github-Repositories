@@ -26,6 +26,12 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 		/// </summary>
 		[Description("Connector CI")]
 		ConnectorCI = 2,
+
+		/// <summary>
+		/// A DataMiner Nuget Solution CICD Workflow.
+		/// </summary>
+		[Description("Nuget Solution CICD")]
+		NugetSolutionCICD = 2,
 	}
 
 	/// <summary>
