@@ -34,7 +34,7 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 		/// <summary>
 		/// The DataMiner Deploy key retrieved from <see href="https://admin.dataminer.services/"/>.
 		/// </summary>
-		[WorkflowSecret]
+		[WorkflowSecret("DATAMINER_DEPLOY_KEY")]
 		public string DataMinerKey { get; private set; }
 	}
 }

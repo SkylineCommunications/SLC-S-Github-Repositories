@@ -11,5 +11,18 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public sealed class WorkflowSecretAttribute : Attribute
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WorkflowSecretAttribute"/> class.
+		/// </summary>
+		/// <param name="name">The name of the secret</param>
+		public WorkflowSecretAttribute(string name)
+		{
+			Name = name;
+		}
+
+		/// <summary>
+		/// The name of the secret.
+		/// </summary>
+		public string Name { get; set; }
 	}
 }
