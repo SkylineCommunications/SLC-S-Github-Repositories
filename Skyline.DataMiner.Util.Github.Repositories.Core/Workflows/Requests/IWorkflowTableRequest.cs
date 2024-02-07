@@ -31,7 +31,7 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 		/// A DataMiner Nuget Solution CICD Workflow.
 		/// </summary>
 		[Description("Nuget Solution CICD")]
-		NugetSolutionCICD = 2,
+		NugetSolutionCICD = 3,
 	}
 
 	/// <summary>
