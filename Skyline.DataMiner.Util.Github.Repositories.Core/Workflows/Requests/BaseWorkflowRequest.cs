@@ -8,7 +8,7 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 	/// A request to add a single workflow to a repository.
 	/// </summary>
 	[Serializable]
-	public abstract class BaseWorkflowRequest : IWorkflowsTableRequest
+	public class BaseWorkflowRequest : IWorkflowsTableRequest
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BaseWorkflowRequest"/> class.
@@ -16,7 +16,7 @@ namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
 		/// <param name="repositoryId">The full ID of the repository in the following format: {owner}/{name}</param>
 		/// <param name="type">The type of workflow that needs to be added.</param>
 		/// <param name="action">The action that needs to be performed.</param>
-		protected BaseWorkflowRequest(string repositoryId, WorkflowType type, WorkflowAction action)
+		public BaseWorkflowRequest(string repositoryId, WorkflowType type, WorkflowAction action)
 		{
 			RepositoryId = repositoryId;
 			WorkflowType = type;
