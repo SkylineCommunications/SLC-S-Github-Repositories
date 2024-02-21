@@ -1,6 +1,6 @@
-﻿// Ignore Spelling: Utils Github Workflows Workflow dataminer
+﻿// Ignore Spelling: Github App Workflows
 
-namespace Skyline.DataMiner.Utils.Github.Repositories.Core.Workflows
+namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows.Attributes
 {
 	using System;
 

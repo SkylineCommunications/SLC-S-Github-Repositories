@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net462</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<AssemblyName>Skyline.DataMiner.Utils.Github.Repositories.Core</AssemblyName>
-		<RootNamespace>Skyline.DataMiner.Utils.Github.Repositories.Core</RootNamespace>
-		<PackageVersion>1.0.1</PackageVersion>
-		<Version>1.0.1</Version>
+		<AssemblyName>Skyline.DataMiner.ConnectorAPI.Github.Repositories</AssemblyName>
+		<RootNamespace>Skyline.DataMiner.ConnectorAPI.Github.Repositories</RootNamespace>
+		<PackageVersion>1.0.1-pre7</PackageVersion>
+		<Version>1.0.1-pre7</Version>
 		<PackageTags>Skyline;DataMiner</PackageTags>
 		<PackageProjectUrl>https://skyline.be</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,9 +17,8 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>SkylineCommunications</Authors>
 		<Company>Skyline Communications</Company>
-		<Description>Contains classes that can be used in both connectors and automation scripts.</Description>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/SkylineCommunications/SLC-C-Github-Repositories</RepositoryUrl>
+		<Description>A Connector API (Inter-App Calls/Messages) for DataMiner elements running the 'Github Repositories' connector.</Description>
+		<Platforms>AnyCPU;x86</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,5 +26,8 @@
 		<None Include="LICENSE.txt" Pack="true" PackagePath="" />
 		<None Include="nuget\Icon.png" Pack="true" PackagePath="" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+	  <PackageReference Include="Skyline.DataMiner.Core.InterAppCalls.Common" Version="1.0.0.3" />
+	</ItemGroup>
 </Project>
