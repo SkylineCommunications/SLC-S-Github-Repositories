@@ -25,5 +25,11 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// </summary>
 		[WorkflowSecret("NUGETAPIKEY_GITHUB")]
 		public string GithubNugetApiKey { get; set; }
+
+		/// <summary>
+		/// Optional Sonar Token secret to be used in case the repository is private.
+		/// </summary>
+		[WorkflowSecret("SONAR_TOKEN")]
+		public string SonarToken { get; set; }
 	}
 }
