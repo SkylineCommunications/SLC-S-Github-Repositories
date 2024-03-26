@@ -33,5 +33,21 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			typeof(AddInternalNugetCICDWorkflowRequest),
 			typeof(AddWorkflowResponse),
 		};
+
+		/// <summary>
+		/// Gets a mapping between the supported InterApp Message requests and their response types.
+		/// </summary>
+		public static Dictionary<Type, Type> KnownTypeMapping { get; } = new Dictionary<Type, Type>
+		{
+			{ typeof(AddRepositoryRequest),							typeof(AddRepositoryResponse) },
+			{ typeof(RemoveRepositoryRequest),						typeof(RemoveRepositoryResponse) },
+
+			{ typeof(AddWorkflowRequest),							typeof(AddWorkflowResponse) },
+			{ typeof(AddAutomationScriptCIWorkflowRequest),         typeof(AddWorkflowResponse) },
+			{ typeof(AddAutomationScriptCICDWorkflowRequest),		typeof(AddWorkflowResponse) },
+			{ typeof(AddConnectorCIWorkflowRequest),				typeof(AddWorkflowResponse) },
+			{ typeof(AddNugetCICDWorkflowRequest),					typeof(AddWorkflowResponse) },
+			{ typeof(AddInternalNugetCICDWorkflowRequest),			typeof(AddWorkflowResponse) },
+		};
 	}
 }

@@ -7,7 +7,6 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 	using System.Linq;
 
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages;
-	using Skyline.DataMiner.Core.DataMinerSystem.Common;
 	using Skyline.DataMiner.Core.InterAppCalls.Common.CallBulk;
 	using Skyline.DataMiner.Core.InterAppCalls.Common.CallSingle;
 	using Skyline.DataMiner.Core.InterAppCalls.Common.Shared;
@@ -59,10 +58,6 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			}
 
 			ProtocolVersion = new ProtocolVersion(elementInfo.ProtocolVersion);
-			if(ProtocolVersion.Seq < 7)
-			{
-				throw new ArgumentException($"The element should be running at least version 1.0.0.7 or higher, to use this nuget package.", nameof(elementId));
-			}
 		}
 		#endregion
 
@@ -89,6 +84,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <param name="messages">The messages that need to be send.</param>
 		public void SendMessageNoResponse(params Message[] messages)
 		{
+			if(!CheckVersion(out var description))
+			{
+				throw new InvalidVersionException(description);
+			}
 
 			IInterAppCall myCommands = InterAppCallFactory.CreateNew();
 			myCommands.ReturnAddress = new ReturnAddress(AgentID, ElementID, Constants.InterAppResponsePID);
@@ -104,6 +103,22 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <returns>The response coming from the device</returns>
 		public IEnumerable<Message> SendMessages(Message[] messages, TimeSpan timeout = default)
 		{
+			if (!CheckVersion(out var description))
+			{
+				var returnMessages = new List<Message>();
+				foreach(var message in messages)
+				{
+					var responseType = Types.KnownTypeMapping[message.GetType()];
+					var response = Activator.CreateInstance(responseType);
+					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Request)).SetValue(response, message);
+					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Description)).SetValue(response, description);
+					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Success)).SetValue(response, false);
+					returnMessages.Add((Message)response);
+				}
+				
+				return returnMessages;
+			}
+
 			var interAppCallTimeout = timeout;
 			if (timeout == default)
 			{
@@ -124,6 +139,16 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <returns>The response coming from the device</returns>
 		public Message SendSingleResponseMessage(Message message, TimeSpan timeout = default)
 		{
+			if (!CheckVersion(out var description))
+			{
+				var responseType = Types.KnownTypeMapping[message.GetType()];
+				var response = Activator.CreateInstance(responseType);
+				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Request)).SetValue(response, message);
+				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Description)).SetValue(response, description);
+				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Success)).SetValue(response, false);
+				return (Message)response;
+			}
+
 			var interAppCallTimeout = timeout;
 			if (timeout == default)
 			{
@@ -134,6 +159,18 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			myCommand.ReturnAddress = new ReturnAddress(AgentID, ElementID, Constants.InterAppResponsePID);
 			myCommand.Messages.AddMessage(message);
 			return myCommand.Send(SLNetConnection, AgentID, ElementID, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes).First();
+		}
+
+		internal bool CheckVersion(out string description)
+		{
+			description = String.Empty;
+			var versionCheck = ProtocolVersion.Seq >= 7;
+			if (!versionCheck)
+			{
+				description = $"The element should be running at least version 1.0.0.7 or higher, to use this nuget package.";
+			}
+
+			return versionCheck;
 		}
 	}
 }
