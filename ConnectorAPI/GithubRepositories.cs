@@ -12,6 +12,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 	using Skyline.DataMiner.Core.InterAppCalls.Common.CallSingle;
 	using Skyline.DataMiner.Core.InterAppCalls.Common.Shared;
 	using Skyline.DataMiner.Net;
+	using Skyline.DataMiner.Net.Messages;
 
 
 	/// <summary>
@@ -45,6 +46,23 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			SLNetConnection = connection ?? throw new ArgumentNullException(nameof(connection));
 			AgentID = dmaId;
 			ElementID = elementId;
+
+			var elementInfo = (ElementInfoEventMessage)SLNetConnection.HandleSingleResponseMessage(new GetElementByIDMessage
+			{
+				DataMinerID = dmaId,
+				ElementID = ElementID,
+			});
+
+			if(elementInfo.Protocol != Constants.ProtocolName)
+			{
+				throw new ArgumentException($"The element is not running protocol '{Constants.ProtocolName}'", nameof(elementId));
+			}
+
+			ProtocolVersion = new ProtocolVersion(elementInfo.ProtocolVersion);
+			if(ProtocolVersion.Seq < 7)
+			{
+				throw new ArgumentException($"The element should be running at least version 1.0.0.7 or higher, to use this nuget package.", nameof(elementId));
+			}
 		}
 		#endregion
 
@@ -62,6 +80,8 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// The id of the element in DataMiner.
 		/// </summary>
 		public int ElementID { get; }
+
+		public ProtocolVersion ProtocolVersion { get; }
 
 		/// <summary>
 		/// Sends the specified messages to the element using InterApp and do not wait for a response.
