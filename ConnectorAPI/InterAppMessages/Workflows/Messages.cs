@@ -3,7 +3,6 @@
 namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows
 {
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows.Data;
-	using Skyline.DataMiner.Core.InterAppCalls.Common.CallSingle;
 
 	/// <summary>
 	/// A request object for the workflows table, that contains all the information to handle request.
@@ -24,7 +23,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository workflow with no input data.
 	/// </summary>
-	public class AddWorkflowRequest : Message, IWorkflowData
+	public class AddWorkflowRequest : IGithubRequest, IWorkflowData
 	{
 		/// <inheritdoc/>
 		public RepositoryId RepositoryId { get; set; }
@@ -49,7 +48,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// The data needed to create an Automation Script CI Workflow.
 		/// </summary>
-		public AutomationScriptCIWorkflowData Data { get; set; }
+		public AutomationScriptCIWorkflowData Data { get; set; } = new AutomationScriptCIWorkflowData();
 	}
 
 	/// <summary>
@@ -70,7 +69,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// The data needed to create an Automation Script CICD Workflow.
 		/// </summary>
-		public AutomationScriptCICDWorkflowData Data { get; set; }
+		public AutomationScriptCICDWorkflowData Data { get; set; } = new AutomationScriptCICDWorkflowData();
 	}
 
 	/// <summary>
@@ -89,7 +88,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// The data needed to create an Connector CI Workflow.
 		/// </summary>
-		public ConnectorCIWorkflowData Data { get; set; }
+		public ConnectorCIWorkflowData Data { get; set; } = new ConnectorCIWorkflowData();
 	}
 
 	/// <summary>
@@ -110,7 +109,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// The data needed to create an Nuget Solution CICD Workflow.
 		/// </summary>
-		public NugetCICDWorkflowData Data { get; set; }
+		public NugetCICDWorkflowData Data { get; set; } = new NugetCICDWorkflowData();
 	}
 
 	/// <summary>
@@ -131,13 +130,21 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// The data needed to create an Nuget Solution CICD Workflow.
 		/// </summary>
-		public InternalNugetCICDWorkflowData Data { get; set; }
+		public InternalNugetCICDWorkflowData Data { get; set; } = new InternalNugetCICDWorkflowData();
 	}
 
 	/// <summary>
 	/// InterApp Response Message that will hold the result of the workflow creation.
 	/// </summary>
-	public class AddWorkflowResponse : BaseResponseMessage<AddWorkflowRequest>
+	public class AddWorkflowResponse : IGithubResponse
 	{
+		/// <inheritdoc/>
+		public bool Success { get; set; }
+
+		/// <inheritdoc/>
+		public string Description { get; set; }
+
+		/// <inheritdoc/>
+		public IGithubRequest Request { get; set; }
 	}
 }

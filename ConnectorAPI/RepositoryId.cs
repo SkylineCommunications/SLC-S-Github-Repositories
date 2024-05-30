@@ -21,7 +21,6 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
             Name = name;
         }
 
-
         /// <summary>
         /// The owner of the repository
         /// </summary>

@@ -1,17 +1,23 @@
-﻿namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
+﻿// Ignore Spelling: Github
+
+namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
 	using System.Text.RegularExpressions;
-	using System.Threading.Tasks;
 
+	/// <summary>
+	/// A class representing a version of a connector.
+	/// </summary>
 	public class ProtocolVersion
 	{
 		private readonly string[] versioning = new string[5];
 		private const string Pattern = @"^(?<branch>\d+).(?<fw>\d+).(?<major>\d+).(?<seq>\d+)(?<suffix>.*)$";
 
+		/// <summary>
+		/// Initialize a new instance of the <see cref="ProtocolVersion"/> class by parsing the connector version string.
+		/// </summary>
+		/// <param name="version">The string representing the protocol version.</param>
+		/// <exception cref="ArgumentException"></exception>
 		public ProtocolVersion(string version)
 		{
 			var match = Regex.Match(version, Pattern);

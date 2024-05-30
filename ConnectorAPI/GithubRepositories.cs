@@ -26,6 +26,46 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// Initialize a new instance of the <see cref="GithubRepositories"/> class.
 		/// </summary>
 		/// <param name="connection">The connection interface.</param>
+		/// <param name="elementName">The name of the element in DataMiner.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public GithubRepositories(IConnection connection, string elementName)
+		{
+			if (String.IsNullOrEmpty(elementName))
+			{
+				throw new ArgumentException("Please provide a valid Element name.", nameof(elementName));
+			}
+
+			SLNetConnection = connection ?? throw new ArgumentNullException(nameof(connection));
+
+			ElementInfoEventMessage elementInfo;
+			try
+			{
+				elementInfo = (ElementInfoEventMessage)SLNetConnection.HandleSingleResponseMessage(new GetElementByNameMessage
+				{
+					ElementName = elementName,
+				});
+			}
+			catch (Exception)
+			{
+				throw new ArgumentException($"The element does not exists with name '{elementName}'", nameof(elementName));
+			}
+
+			if (elementInfo.Protocol != Constants.ProtocolName)
+			{
+				throw new ArgumentException($"The element is not running protocol '{Constants.ProtocolName}'", nameof(elementName));
+			}
+
+			AgentId = elementInfo.DataMinerID;
+			ElementId = elementInfo.ElementID;
+
+			ProtocolVersion = new ProtocolVersion(elementInfo.ProtocolVersion);
+		}
+
+		/// <summary>
+		/// Initialize a new instance of the <see cref="GithubRepositories"/> class.
+		/// </summary>
+		/// <param name="connection">The connection interface.</param>
 		/// <param name="dmaId">The id of the DataMiner that is hosting the element.</param>
 		/// <param name="elementId">The id of the element in DataMiner.</param>
 		/// <exception cref="ArgumentNullException"></exception>
@@ -43,16 +83,24 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			}
 
 			SLNetConnection = connection ?? throw new ArgumentNullException(nameof(connection));
-			AgentID = dmaId;
-			ElementID = elementId;
+			AgentId = dmaId;
+			ElementId = elementId;
 
-			var elementInfo = (ElementInfoEventMessage)SLNetConnection.HandleSingleResponseMessage(new GetElementByIDMessage
+			ElementInfoEventMessage elementInfo;
+			try
 			{
-				DataMinerID = dmaId,
-				ElementID = ElementID,
-			});
+				elementInfo = (ElementInfoEventMessage)SLNetConnection.HandleSingleResponseMessage(new GetElementByIDMessage
+				{
+					DataMinerID = dmaId,
+					ElementID = elementId,
+				});
+			}
+			catch
+			{
+				throw new ArgumentException($"The element does not exists with id '{dmaId}/{elementId}'", nameof(elementId));
+			}
 
-			if(elementInfo.Protocol != Constants.ProtocolName)
+			if (elementInfo.Protocol != Constants.ProtocolName)
 			{
 				throw new ArgumentException($"The element is not running protocol '{Constants.ProtocolName}'", nameof(elementId));
 			}
@@ -69,20 +117,23 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <summary>
 		/// The id of the DataMiner that is hosting the element.
 		/// </summary>
-		public int AgentID { get; }
+		public int AgentId { get; }
 
 		/// <summary>
 		/// The id of the element in DataMiner.
 		/// </summary>
-		public int ElementID { get; }
+		public int ElementId { get; }
 
+		/// <summary>
+		/// The protocol version of the element.
+		/// </summary>
 		public ProtocolVersion ProtocolVersion { get; }
 
 		/// <summary>
 		/// Sends the specified messages to the element using InterApp and do not wait for a response.
 		/// </summary>
 		/// <param name="messages">The messages that need to be send.</param>
-		public void SendMessageNoResponse(params Message[] messages)
+		public void SendMessageNoResponse(params IGithubRequest[] messages)
 		{
 			if(!CheckVersion(out var description))
 			{
@@ -90,9 +141,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			}
 
 			IInterAppCall myCommands = InterAppCallFactory.CreateNew();
-			myCommands.ReturnAddress = new ReturnAddress(AgentID, ElementID, Constants.InterAppResponsePID);
-			myCommands.Messages.AddMessage(messages);
-			myCommands.Send(SLNetConnection, AgentID, ElementID, Constants.InterAppReceiverPID, Types.KnownTypes);
+			myCommands.ReturnAddress = new ReturnAddress(AgentId, ElementId, Constants.InterAppResponsePID);
+			myCommands.Messages.AddMessage(messages.Select(Types.ToMessage).ToArray());
+			myCommands.Send(SLNetConnection, AgentId, ElementId, Constants.InterAppReceiverPID, Types.KnownTypes);
 		}
 
 		/// <summary>
@@ -101,19 +152,19 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <param name="messages">The messages that need to be send.</param>
 		/// <param name="timeout">The time the method needs to wait for a response.</param>
 		/// <returns>The response coming from the device</returns>
-		public IEnumerable<Message> SendMessages(Message[] messages, TimeSpan timeout = default)
+		public IEnumerable<IGithubResponse> SendMessages(IGithubRequest[] messages, TimeSpan timeout = default)
 		{
 			if (!CheckVersion(out var description))
 			{
-				var returnMessages = new List<Message>();
+				var returnMessages = new List<IGithubResponse>();
 				foreach(var message in messages)
 				{
 					var responseType = Types.KnownTypeMapping[message.GetType()];
 					var response = Activator.CreateInstance(responseType);
-					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Request)).SetValue(response, message);
-					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Description)).SetValue(response, description);
-					responseType.GetProperty(nameof(BaseResponseMessage<Message>.Success)).SetValue(response, false);
-					returnMessages.Add((Message)response);
+					responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
+					responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
+					responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+					returnMessages.Add((IGithubResponse)response);
 				}
 				
 				return returnMessages;
@@ -126,9 +177,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			}
 
 			IInterAppCall myCommands = InterAppCallFactory.CreateNew();
-			myCommands.ReturnAddress = new ReturnAddress(AgentID, ElementID, Constants.InterAppResponsePID);
-			myCommands.Messages.AddMessage(messages);
-			return myCommands.Send(SLNetConnection, AgentID, ElementID, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes);
+			myCommands.ReturnAddress = new ReturnAddress(AgentId, ElementId, Constants.InterAppResponsePID);
+			myCommands.Messages.AddMessage(messages.Select(Types.ToMessage).ToArray());
+			var internalResult = myCommands.Send(SLNetConnection, AgentId, ElementId, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes);
+			return internalResult.Select(result => Types.FromMessage(result));
 		}
 
 		/// <summary>
@@ -137,16 +189,16 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <param name="message">The message that needs to be send.</param>
 		/// <param name="timeout">The time the method needs to wait for a response.</param>
 		/// <returns>The response coming from the device</returns>
-		public Message SendSingleResponseMessage(Message message, TimeSpan timeout = default)
+		public IGithubResponse SendSingleResponseMessage(IGithubRequest message, TimeSpan timeout = default)
 		{
 			if (!CheckVersion(out var description))
 			{
 				var responseType = Types.KnownTypeMapping[message.GetType()];
 				var response = Activator.CreateInstance(responseType);
-				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Request)).SetValue(response, message);
-				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Description)).SetValue(response, description);
-				responseType.GetProperty(nameof(BaseResponseMessage<Message>.Success)).SetValue(response, false);
-				return (Message)response;
+				responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
+				responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
+				responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+				return (IGithubResponse)response;
 			}
 
 			var interAppCallTimeout = timeout;
@@ -156,18 +208,51 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			}
 
 			IInterAppCall myCommand = InterAppCallFactory.CreateNew();
-			myCommand.ReturnAddress = new ReturnAddress(AgentID, ElementID, Constants.InterAppResponsePID);
-			myCommand.Messages.AddMessage(message);
-			return myCommand.Send(SLNetConnection, AgentID, ElementID, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes).First();
+			myCommand.ReturnAddress = new ReturnAddress(AgentId, ElementId, Constants.InterAppResponsePID);
+			myCommand.Messages.AddMessage(Types.ToMessage(message));
+			var internalResult = myCommand.Send(SLNetConnection, AgentId, ElementId, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes).First();
+			return Types.FromMessage(internalResult);
+		}
+
+		/// <summary>
+		/// Sends the specified message to the element using InterApp and wait for the responses.
+		/// </summary>
+		/// <param name="message">The message that needs to be send.</param>
+		/// <param name="timeout">The time the method needs to wait for a response.</param>
+		/// <returns>The response coming from the device</returns>
+		public T SendSingleResponseMessage<T>(IGithubRequest message, TimeSpan timeout = default)
+			where T : IGithubResponse
+		{
+			if (!CheckVersion(out var description))
+			{
+				var responseType = typeof(T);
+				var response = Activator.CreateInstance(typeof(T));
+				responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
+				responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
+				responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+				return (T)response;
+			}
+
+			var interAppCallTimeout = timeout;
+			if (timeout == default)
+			{
+				interAppCallTimeout = defaultTimeout;
+			}
+
+			IInterAppCall myCommand = InterAppCallFactory.CreateNew();
+			myCommand.ReturnAddress = new ReturnAddress(AgentId, ElementId, Constants.InterAppResponsePID);
+			myCommand.Messages.AddMessage(Types.ToMessage(message));
+			var internalResult = myCommand.Send(SLNetConnection, AgentId, ElementId, Constants.InterAppReceiverPID, interAppCallTimeout, Types.KnownTypes).First();
+			return (T)Types.FromMessage(internalResult);
 		}
 
 		internal bool CheckVersion(out string description)
 		{
 			description = String.Empty;
-			var versionCheck = ProtocolVersion.Seq >= 7;
+			var versionCheck = ProtocolVersion.Seq >= 8;
 			if (!versionCheck)
 			{
-				description = $"The element should be running at least version 1.0.0.7 or higher, to use this nuget package.";
+				description = $"The element should be running at least version 1.0.0.8 or higher, to use this nuget package.";
 			}
 
 			return versionCheck;

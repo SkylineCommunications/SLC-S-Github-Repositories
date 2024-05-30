@@ -7,6 +7,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Repositories;
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows;
+	using Skyline.DataMiner.Core.InterAppCalls.Common.CallSingle;
 
 	/// <summary>
 	/// Static class holding the types of the InterApp Messages.
@@ -19,19 +20,25 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 		public static List<Type> KnownTypes { get; } = new List<Type>
 		{
 			// Repositories
-			typeof(AddRepositoryRequest),
-			typeof(AddRepositoryResponse),
-			typeof(RemoveRepositoryRequest),
-			typeof(RemoveRepositoryResponse),
+			typeof(GenericInterAppMessage<AddRepositoryRequest>),
+			typeof(GenericInterAppMessage<AddRepositoryResponse>),
+			typeof(GenericInterAppMessage<CreateRepositoryRequest>),
+			typeof(GenericInterAppMessage<CreateRepositoryResponse>),
+			typeof(GenericInterAppMessage<CreateRepositoryContentRequest>),
+			typeof(GenericInterAppMessage<CreateRepositoryContentResponse>),
+			typeof(GenericInterAppMessage<AddRepositoryCollaboratorRequest>),
+			typeof(GenericInterAppMessage<AddRepositoryCollaboratorResponse>),
+			typeof(GenericInterAppMessage<RemoveRepositoryRequest>),
+			typeof(GenericInterAppMessage<RemoveRepositoryResponse>),
 
 			// Workflows
-			typeof(AddWorkflowRequest),
-			typeof(AddAutomationScriptCIWorkflowRequest),
-			typeof(AddAutomationScriptCICDWorkflowRequest),
-			typeof(AddConnectorCIWorkflowRequest),
-			typeof(AddNugetCICDWorkflowRequest),
-			typeof(AddInternalNugetCICDWorkflowRequest),
-			typeof(AddWorkflowResponse),
+			typeof(GenericInterAppMessage<AddWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddAutomationScriptCIWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddAutomationScriptCICDWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddConnectorCIWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddNugetCICDWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddWorkflowResponse>),
 		};
 
 		/// <summary>
@@ -39,15 +46,84 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 		/// </summary>
 		public static Dictionary<Type, Type> KnownTypeMapping { get; } = new Dictionary<Type, Type>
 		{
-			{ typeof(AddRepositoryRequest),							typeof(AddRepositoryResponse) },
-			{ typeof(RemoveRepositoryRequest),						typeof(RemoveRepositoryResponse) },
+			{ typeof(AddRepositoryRequest),                         typeof(AddRepositoryResponse) },
+			{ typeof(CreateRepositoryRequest),                      typeof(CreateRepositoryResponse) },
+			{ typeof(CreateRepositoryContentRequest),               typeof(CreateRepositoryContentResponse) },
+			{ typeof(AddRepositoryCollaboratorRequest),             typeof(AddRepositoryCollaboratorResponse) },
+			{ typeof(RemoveRepositoryRequest),                      typeof(RemoveRepositoryResponse) },
 
-			{ typeof(AddWorkflowRequest),							typeof(AddWorkflowResponse) },
+			{ typeof(AddWorkflowRequest),                           typeof(AddWorkflowResponse) },
 			{ typeof(AddAutomationScriptCIWorkflowRequest),         typeof(AddWorkflowResponse) },
-			{ typeof(AddAutomationScriptCICDWorkflowRequest),		typeof(AddWorkflowResponse) },
-			{ typeof(AddConnectorCIWorkflowRequest),				typeof(AddWorkflowResponse) },
-			{ typeof(AddNugetCICDWorkflowRequest),					typeof(AddWorkflowResponse) },
-			{ typeof(AddInternalNugetCICDWorkflowRequest),			typeof(AddWorkflowResponse) },
+			{ typeof(AddAutomationScriptCICDWorkflowRequest),       typeof(AddWorkflowResponse) },
+			{ typeof(AddConnectorCIWorkflowRequest),                typeof(AddWorkflowResponse) },
+			{ typeof(AddNugetCICDWorkflowRequest),                  typeof(AddWorkflowResponse) },
+			{ typeof(AddInternalNugetCICDWorkflowRequest),          typeof(AddWorkflowResponse) },
 		};
+
+		internal static Message ToMessage(IGithubMessage message)
+		{
+			switch (message)
+			{
+				case AddRepositoryRequest addRepositoryRequest:
+					return new GenericInterAppMessage<AddRepositoryRequest>(addRepositoryRequest);
+
+				case CreateRepositoryRequest createRepositoryRequest:
+					return new GenericInterAppMessage<CreateRepositoryRequest>(createRepositoryRequest);
+
+				case CreateRepositoryContentRequest createRepositoryContent:
+					return new GenericInterAppMessage<CreateRepositoryContentRequest>(createRepositoryContent);
+
+				case AddRepositoryCollaboratorRequest addRepositoryCollaboratorRequest:
+					return new GenericInterAppMessage<AddRepositoryCollaboratorRequest>(addRepositoryCollaboratorRequest);
+
+				case RemoveRepositoryRequest removeRepositoryRequest:
+					return new GenericInterAppMessage<RemoveRepositoryRequest>(removeRepositoryRequest);
+
+				case AddAutomationScriptCIWorkflowRequest addAutomationScriptCIWorkflowRequest:
+					return new GenericInterAppMessage<AddAutomationScriptCIWorkflowRequest>(addAutomationScriptCIWorkflowRequest);
+
+				case AddAutomationScriptCICDWorkflowRequest addAutomationScriptCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddAutomationScriptCICDWorkflowRequest>(addAutomationScriptCICDWorkflowRequest);
+
+				case AddConnectorCIWorkflowRequest addConnectorCIWorkflowRequest:
+					return new GenericInterAppMessage<AddConnectorCIWorkflowRequest>(addConnectorCIWorkflowRequest);
+
+				case AddNugetCICDWorkflowRequest addNugetCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddNugetCICDWorkflowRequest>(addNugetCICDWorkflowRequest);
+
+				case AddInternalNugetCICDWorkflowRequest addInternalNugetCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>(addInternalNugetCICDWorkflowRequest);
+
+				default:
+					throw new InvalidOperationException("Unknown message type");
+			}
+		}
+	
+		internal static IGithubResponse FromMessage(Message message)
+		{
+			switch (message)
+			{
+				case GenericInterAppMessage<AddRepositoryResponse> addRepositoryResponse:
+					return addRepositoryResponse.Data;
+
+				case GenericInterAppMessage<CreateRepositoryResponse> createRepositoryResponse:
+					return createRepositoryResponse.Data;
+
+				case GenericInterAppMessage<CreateRepositoryContentResponse> createRepositoryContentResponse:
+					return createRepositoryContentResponse.Data;
+
+				case GenericInterAppMessage<AddRepositoryCollaboratorResponse> addRepositoryCollaboratorResponse:
+					return addRepositoryCollaboratorResponse.Data;
+
+				case GenericInterAppMessage<RemoveRepositoryResponse> addRepositoryResponse:
+					return addRepositoryResponse.Data;
+
+				case GenericInterAppMessage<AddWorkflowResponse> addRepositoryResponse:
+					return addRepositoryResponse.Data;
+
+				default:
+					throw new InvalidOperationException("Unknown message type");
+			}
+		}
 	}
 }
