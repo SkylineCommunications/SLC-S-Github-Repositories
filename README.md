@@ -1,4 +1,8 @@
-# Skyline.DataMiner.Utils.Github.Repositories.Core
+# Skyline.DataMiner.ConnectorAPI.Github.Repositories
+
+## About
+
+A Connector API (Inter-App Calls/Messages) for DataMiner elements running the 'Github Repositories' connector.
 
 ## Table of Content
 
@@ -30,4 +34,4 @@ At Skyline Communications, we deal in world-class solutions that are deployed by
 
 ## Installation
 
-Add the nuget package to your project with the "Manage Nuget Packges..." and search for "Skyline.DataMiner.Utils.Github.Repositories.Core".
+Add the nuget package to your project with the "Manage Nuget Packges..." and search for "Skyline.DataMiner.ConnectorAPI.Github.Repositories".
