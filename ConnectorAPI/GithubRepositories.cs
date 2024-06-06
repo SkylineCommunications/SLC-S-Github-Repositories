@@ -249,10 +249,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		internal bool CheckVersion(out string description)
 		{
 			description = String.Empty;
-			var versionCheck = ProtocolVersion.Seq >= 8;
+			var versionCheck = ProtocolVersion.Seq >= 9;
 			if (!versionCheck)
 			{
-				description = $"The element should be running at least version 1.0.0.8 or higher, to use this nuget package.";
+				description = $"The element should be running at least version 1.0.0.9 or higher, to use this nuget package.";
 			}
 
 			return versionCheck;
