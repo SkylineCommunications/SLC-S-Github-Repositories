@@ -30,6 +30,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			typeof(GenericInterAppMessage<AddRepositoryCollaboratorResponse>),
 			typeof(GenericInterAppMessage<RemoveRepositoryRequest>),
 			typeof(GenericInterAppMessage<RemoveRepositoryResponse>),
+			typeof(GenericInterAppMessage<AddRepositoryTopicsRequest>),
+			typeof(GenericInterAppMessage<AddRepositoryTopicsResponse>),
+			typeof(GenericInterAppMessage<RemoveRepositoryRequest>),
+			typeof(GenericInterAppMessage<RemoveRepositoryResponse>),
 
 			// Workflows
 			typeof(GenericInterAppMessage<AddWorkflowRequest>),
@@ -51,6 +55,8 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			{ typeof(CreateRepositoryContentRequest),               typeof(CreateRepositoryContentResponse) },
 			{ typeof(AddRepositoryCollaboratorRequest),             typeof(AddRepositoryCollaboratorResponse) },
 			{ typeof(RemoveRepositoryRequest),                      typeof(RemoveRepositoryResponse) },
+			{ typeof(AddRepositoryTopicsRequest),					typeof(AddRepositoryTopicsResponse) },
+			{ typeof(RemoveRepositoryTopicsRequest),				typeof(RemoveRepositoryTopicsResponse) },
 
 			{ typeof(AddWorkflowRequest),                           typeof(AddWorkflowResponse) },
 			{ typeof(AddAutomationScriptCIWorkflowRequest),         typeof(AddWorkflowResponse) },
@@ -78,6 +84,12 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 
 				case RemoveRepositoryRequest removeRepositoryRequest:
 					return new GenericInterAppMessage<RemoveRepositoryRequest>(removeRepositoryRequest);
+
+				case AddRepositoryTopicsRequest addRepositoryTopicsRequest:
+					return new GenericInterAppMessage<AddRepositoryTopicsRequest>(addRepositoryTopicsRequest);
+
+				case RemoveRepositoryTopicsRequest removeRepositoryTopicsRequest:
+					return new GenericInterAppMessage<RemoveRepositoryTopicsRequest>(removeRepositoryTopicsRequest);
 
 				case AddAutomationScriptCIWorkflowRequest addAutomationScriptCIWorkflowRequest:
 					return new GenericInterAppMessage<AddAutomationScriptCIWorkflowRequest>(addAutomationScriptCIWorkflowRequest);
@@ -117,6 +129,12 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 
 				case GenericInterAppMessage<RemoveRepositoryResponse> addRepositoryResponse:
 					return addRepositoryResponse.Data;
+
+				case GenericInterAppMessage<AddRepositoryTopicsResponse> addRepositoryTopicsResponse:
+					return addRepositoryTopicsResponse.Data;
+
+				case GenericInterAppMessage<RemoveRepositoryTopicsResponse> removeRepositoryTopicsResponse:
+					return removeRepositoryTopicsResponse.Data;
 
 				case GenericInterAppMessage<AddWorkflowResponse> addRepositoryResponse:
 					return addRepositoryResponse.Data;
