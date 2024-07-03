@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Github
+﻿// Ignore Spelling: Github App
 
 namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Repositories
 {
@@ -18,7 +18,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 		/// <summary>
 		/// Gets or sets the topics to be added.
 		/// </summary>
-		public IEnumerable<string> Topics { get; set; } = new List<string>();
+		public List<string> Topics { get; set; } = new List<string>();
 	}
 
 	/// <summary>
@@ -54,7 +54,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 		/// <summary>
 		/// Gets or sets the topics to be removed.
 		/// </summary>
-		public IEnumerable<string> Topics { get; set; } = new List<string>();
+		public List<string> Topics { get; set; } = new List<string>();
 	}
 
 	/// <summary>

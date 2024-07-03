@@ -32,8 +32,8 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			typeof(GenericInterAppMessage<RemoveRepositoryResponse>),
 			typeof(GenericInterAppMessage<AddRepositoryTopicsRequest>),
 			typeof(GenericInterAppMessage<AddRepositoryTopicsResponse>),
-			typeof(GenericInterAppMessage<RemoveRepositoryRequest>),
-			typeof(GenericInterAppMessage<RemoveRepositoryResponse>),
+			typeof(GenericInterAppMessage<RemoveRepositoryTopicsRequest>),
+			typeof(GenericInterAppMessage<RemoveRepositoryTopicsResponse>),
 
 			// Workflows
 			typeof(GenericInterAppMessage<AddWorkflowRequest>),

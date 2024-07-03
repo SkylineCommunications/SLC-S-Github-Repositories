@@ -5,8 +5,8 @@
 		<Nullable>disable</Nullable>
 		<AssemblyName>Skyline.DataMiner.ConnectorAPI.Github.Repositories</AssemblyName>
 		<RootNamespace>Skyline.DataMiner.ConnectorAPI.Github.Repositories</RootNamespace>
-		<PackageVersion>1.0.5</PackageVersion>
-		<Version>1.0.5</Version>
+		<PackageVersion>1.0.6</PackageVersion>
+		<Version>1.0.6</Version>
 		<PackageTags>Skyline;DataMiner</PackageTags>
 		<PackageProjectUrl>https://skyline.be</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
