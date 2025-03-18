@@ -3,11 +3,12 @@
 namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows
 {
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows.Data;
+    using System.Collections.Generic;
 
-	/// <summary>
-	/// A request object for the workflows table, that contains all the information to handle request.
-	/// </summary>
-	public interface IWorkflowData
+    /// <summary>
+    /// A request object for the workflows table, that contains all the information to handle request.
+    /// </summary>
+    public interface IWorkflowData
 	{
 		/// <summary>
 		/// The full id of the repository.
@@ -147,4 +148,54 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <inheritdoc/>
 		public IGithubRequest Request { get; set; }
 	}
+
+    /// <summary>
+    /// InterApp Message that will execute a workflow.
+    /// </summary>
+    public class ExecuteWorkflowRequest : IGithubRequest, IWorkflowData
+    {
+        /// <summary>
+        /// Instantiates a new instance of the <see cref="ExecuteWorkflowRequest"/> class.
+        /// </summary>
+        public ExecuteWorkflowRequest()
+        {
+            WorkflowType = WorkflowType.Generic;
+        }
+
+        /// <inheritdoc/>
+        public RepositoryId RepositoryId { get; set; }
+
+        /// <summary>
+		/// The id of the workflow to be executed.
+		/// </summary>
+        public string WorkflowId { get; set; }
+
+        /// <summary>
+        /// The branch or tag name to execute the workflow on
+        /// </summary>
+        public string WorkflowReference { get; set; }
+
+        /// <summary>
+		/// Any inputs required by the workflow in order for it to be executed.
+		/// </summary>
+        public Dictionary<string, string> WorkflowInputs { get; set; }
+
+        /// <inheritdoc/>
+        public WorkflowType WorkflowType { get; protected set; }
+    }
+
+    /// <summary>
+    /// InterApp Response Message that will hold the result of the workflow execution.
+    /// </summary>
+    public class ExecuteWorkflowResponse : IGithubResponse
+    {
+        /// <inheritdoc/>
+        public bool Success { get; set; }
+
+        /// <inheritdoc/>
+        public string Description { get; set; }
+
+        /// <inheritdoc/>
+        public IGithubRequest Request { get; set; }
+    }
 }
