@@ -38,5 +38,5 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// </summary>
 		[Description("Internal Nuget Solution CICD")]
 		InternalNugetSolutionCICD = 4,
-	}
+    }
 }

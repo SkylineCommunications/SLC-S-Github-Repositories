@@ -2,6 +2,8 @@
 
 namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows
 {
+	using System.Collections.Generic;
+
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows.Data;
 
 	/// <summary>
@@ -137,6 +139,52 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// InterApp Response Message that will hold the result of the workflow creation.
 	/// </summary>
 	public class AddWorkflowResponse : IGithubResponse
+	{
+		/// <inheritdoc/>
+		public bool Success { get; set; }
+
+		/// <inheritdoc/>
+		public string Description { get; set; }
+
+		/// <inheritdoc/>
+		public IGithubRequest Request { get; set; }
+	}
+
+	/// <summary>
+	/// InterApp Message that will execute a workflow.
+	/// </summary>
+	public class ExecuteWorkflowRequest : IGithubRequest
+	{
+		/// <summary>
+		/// Instantiates a new instance of the <see cref="ExecuteWorkflowRequest"/> class.
+		/// </summary>
+		public ExecuteWorkflowRequest()
+		{
+		}
+
+		/// <inheritdoc/>
+		public RepositoryId RepositoryId { get; set; }
+
+		/// <summary>
+		/// The id of the workflow to be executed.
+		/// </summary>
+		public string WorkflowId { get; set; }
+
+		/// <summary>
+		/// The branch or tag name to execute the workflow on
+		/// </summary>
+		public string WorkflowReference { get; set; }
+
+		/// <summary>
+		/// Any inputs required by the workflow in order for it to be executed.
+		/// </summary>
+		public Dictionary<string, object> WorkflowInputs { get; set; }
+	}
+
+	/// <summary>
+	/// InterApp Response Message that will hold the result of the workflow execution.
+	/// </summary>
+	public class ExecuteWorkflowResponse : IGithubResponse
 	{
 		/// <inheritdoc/>
 		public bool Success { get; set; }

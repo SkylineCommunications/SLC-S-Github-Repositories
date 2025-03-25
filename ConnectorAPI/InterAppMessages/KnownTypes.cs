@@ -43,7 +43,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			typeof(GenericInterAppMessage<AddNugetCICDWorkflowRequest>),
 			typeof(GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>),
 			typeof(GenericInterAppMessage<AddWorkflowResponse>),
-		};
+            typeof(GenericInterAppMessage<ExecuteWorkflowRequest>),
+            typeof(GenericInterAppMessage<ExecuteWorkflowResponse>),
+        };
 
 		/// <summary>
 		/// Gets a mapping between the supported InterApp Message requests and their response types.
@@ -64,7 +66,8 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			{ typeof(AddConnectorCIWorkflowRequest),                typeof(AddWorkflowResponse) },
 			{ typeof(AddNugetCICDWorkflowRequest),                  typeof(AddWorkflowResponse) },
 			{ typeof(AddInternalNugetCICDWorkflowRequest),          typeof(AddWorkflowResponse) },
-		};
+            { typeof(ExecuteWorkflowRequest),						typeof(ExecuteWorkflowResponse) },
+        };
 
 		internal static Message ToMessage(IGithubMessage message)
 		{
@@ -106,7 +109,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 				case AddInternalNugetCICDWorkflowRequest addInternalNugetCICDWorkflowRequest:
 					return new GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>(addInternalNugetCICDWorkflowRequest);
 
-				default:
+                case ExecuteWorkflowRequest executeWorkflowRequest:
+                    return new GenericInterAppMessage<ExecuteWorkflowRequest>(executeWorkflowRequest);
+
+                default:
 					throw new InvalidOperationException("Unknown message type");
 			}
 		}
@@ -139,7 +145,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 				case GenericInterAppMessage<AddWorkflowResponse> addRepositoryResponse:
 					return addRepositoryResponse.Data;
 
-				default:
+                case GenericInterAppMessage<ExecuteWorkflowResponse> executeWorkflowResponse:
+                    return executeWorkflowResponse.Data;
+
+                default:
 					throw new InvalidOperationException("Unknown message type");
 			}
 		}
