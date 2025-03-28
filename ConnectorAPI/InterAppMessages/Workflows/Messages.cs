@@ -178,7 +178,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// <summary>
 		/// Any inputs required by the workflow in order for it to be executed.
 		/// </summary>
-		public Dictionary<string, object> WorkflowInputs { get; set; }
+		public Dictionary<string, string> WorkflowInputs { get; set; }
 	}
 
 	/// <summary>
