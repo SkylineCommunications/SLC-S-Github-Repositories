@@ -5,8 +5,7 @@
 		<Nullable>disable</Nullable>
 		<AssemblyName>Skyline.DataMiner.ConnectorAPI.Github.Repositories</AssemblyName>
 		<RootNamespace>Skyline.DataMiner.ConnectorAPI.Github.Repositories</RootNamespace>
-		<PackageVersion>1.0.8</PackageVersion>
-		<Version>1.0.8</Version>
+		<Version>1.0.9</Version>
 		<PackageTags>Skyline;DataMiner</PackageTags>
 		<PackageProjectUrl>https://skyline.be</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -30,4 +29,8 @@
 	<ItemGroup>
 	  <PackageReference Include="Skyline.DataMiner.Core.InterAppCalls.Common" Version="1.0.1.1" />
 	</ItemGroup>
+
+	<Target Name="CopyNuGetPackage" AfterTargets="Pack" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Skyline_Data\Nuget Store\$(PackageId)" />
+	</Target>
 </Project>

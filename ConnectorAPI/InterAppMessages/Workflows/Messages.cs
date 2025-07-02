@@ -35,6 +35,24 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	}
 
 	/// <summary>
+	/// InterApp Message that will add a new repository Workflow to the tracked repositories.
+	/// </summary>
+	public class AddCustomWorkflowRequest : AddWorkflowRequest
+	{
+		/// <summary>
+		/// Instantiates a new instance of the <see cref="AddCustomWorkflowRequest"/> class.
+		/// </summary>
+		public AddCustomWorkflowRequest()
+		{
+			WorkflowType = WorkflowType.Custom;
+		}
+		/// <summary>
+		/// The data needed to create a Custom Workflow.
+		/// </summary>
+		public CustomWorkflowData Workflow { get; set; } = new CustomWorkflowData();
+	}
+
+	/// <summary>
 	/// InterApp Message that will add a new repository Automation Script CI Workflow to the tracked repositories.
 	/// </summary>
 	public class AddAutomationScriptCIWorkflowRequest : AddWorkflowRequest

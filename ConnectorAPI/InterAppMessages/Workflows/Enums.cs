@@ -10,6 +10,11 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	public enum WorkflowType
 	{
 		/// <summary>
+		/// A custom workflow.
+		/// </summary>
+		Custom = -1,
+
+		/// <summary>
 		/// A DataMiner Automation Script CI Workflow.
 		/// </summary>
 		[Description("Automation Script CI")]
@@ -38,5 +43,11 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		/// </summary>
 		[Description("Internal Nuget Solution CICD")]
 		InternalNugetSolutionCICD = 4,
-    }
+
+		/// <summary>
+		/// A DataMiner App Package Workflow.
+		/// </summary>
+		[Description("App Package")]
+		AppPackage = 5,
+	}
 }

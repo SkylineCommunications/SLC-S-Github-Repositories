@@ -42,6 +42,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			typeof(GenericInterAppMessage<AddConnectorCIWorkflowRequest>),
 			typeof(GenericInterAppMessage<AddNugetCICDWorkflowRequest>),
 			typeof(GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>),
+			typeof(GenericInterAppMessage<AddCustomWorkflowRequest>),
 			typeof(GenericInterAppMessage<AddWorkflowResponse>),
             typeof(GenericInterAppMessage<ExecuteWorkflowRequest>),
             typeof(GenericInterAppMessage<ExecuteWorkflowResponse>),
@@ -66,6 +67,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 			{ typeof(AddConnectorCIWorkflowRequest),                typeof(AddWorkflowResponse) },
 			{ typeof(AddNugetCICDWorkflowRequest),                  typeof(AddWorkflowResponse) },
 			{ typeof(AddInternalNugetCICDWorkflowRequest),          typeof(AddWorkflowResponse) },
+			{ typeof(AddCustomWorkflowRequest),						typeof(AddWorkflowResponse) },
             { typeof(ExecuteWorkflowRequest),						typeof(ExecuteWorkflowResponse) },
         };
 
@@ -109,7 +111,10 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 				case AddInternalNugetCICDWorkflowRequest addInternalNugetCICDWorkflowRequest:
 					return new GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>(addInternalNugetCICDWorkflowRequest);
 
-                case ExecuteWorkflowRequest executeWorkflowRequest:
+				case AddCustomWorkflowRequest addCustomWorkflowRequest:
+					return new GenericInterAppMessage<AddCustomWorkflowRequest>(addCustomWorkflowRequest);
+
+				case ExecuteWorkflowRequest executeWorkflowRequest:
                     return new GenericInterAppMessage<ExecuteWorkflowRequest>(executeWorkflowRequest);
 
                 default:
