@@ -8,9 +8,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 	public static class Constants
 	{
 		/// <summary>
-		/// The protocol name of the Github Repositories connector.
+		/// The protocol name of the GitHub Repositories connector.
 		/// </summary>
-		public const string ProtocolName = "Github Repositories";
+		public const string ProtocolName = "GitHub Repositories";
 
 		/// <summary>
 		/// The ID of the parameter that will receive the InterApp Messages
