@@ -51,7 +51,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 				throw new ArgumentException($"The element does not exists with name '{elementName}'", nameof(elementName));
 			}
 
-			if (elementInfo.Protocol != Constants.ProtocolName)
+			if (!elementInfo.Protocol.Equals(Constants.ProtocolName, StringComparison.OrdinalIgnoreCase))
 			{
 				throw new ArgumentException($"The element is not running protocol '{Constants.ProtocolName}'", nameof(elementName));
 			}
