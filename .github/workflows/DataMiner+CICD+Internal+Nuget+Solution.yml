@@ -10,14 +10,8 @@ on:
   workflow_dispatch:
 jobs:
   CICD:
-    uses: SkylineCommunications/_ReusableWorkflows/.github/workflows/Internal NuGet Solution Master Workflow.yml@main
+    uses: SkylineCommunications/_ReusableWorkflows/.github/workflows/Master Workflow.yml@main
     with:
-      referenceName: ${{ github.ref_name }}
-      runNumber: ${{ github.run_number }}
-      referenceType: ${{ github.ref_type }}
-      repository: ${{ github.repository }}
-      owner: ${{ github.repository_owner }}
-      sonarCloudProjectName: SkylineCommunications_SLC-S-Github-Repositories-Core
+      sonarcloud-project-name: SkylineCommunications_SLC-S-Github-Repositories-Core
     secrets:
-      sonarCloudToken: ${{ secrets.SONAR_TOKEN }}
-      nugetApiKey: ${{ secrets.NUGETAPIKEY_GITHUB }}
+      NUGET_API_KEY: ${{ secrets.NUGETAPIKEY_GITHUB }}
