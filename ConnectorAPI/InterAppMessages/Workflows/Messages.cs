@@ -2,6 +2,7 @@
 
 namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows
 {
+	using System;
 	using System.Collections.Generic;
 
 	using Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Workflows.Data;
@@ -22,9 +23,15 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 		WorkflowType WorkflowType { get; }
 	}
 
+	internal static class WorkflowDeprecation
+	{
+		internal const string Message = "Use CreateRepositoryContentRequest to add the workflow file to the repository instead. This message will be removed in a future major version.";
+	}
+
 	/// <summary>
 	/// InterApp Message that will add a new repository workflow with no input data.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 	public class AddWorkflowRequest : IGithubRequest, IWorkflowData
 	{
 		/// <inheritdoc/>
@@ -37,6 +44,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 	public class AddCustomWorkflowRequest : AddWorkflowRequest
 	{
 		/// <summary>
@@ -55,6 +63,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Automation Script CI Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 	public class AddAutomationScriptCIWorkflowRequest : AddWorkflowRequest
 	{
 		/// <summary>
@@ -74,6 +83,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Automation Script CICD Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 #pragma warning disable S101 // Types should be named in PascalCase
 	public class AddAutomationScriptCICDWorkflowRequest : AddWorkflowRequest
 #pragma warning restore S101 // Types should be named in PascalCase
@@ -95,6 +105,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Connector CI Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 	public class AddConnectorCIWorkflowRequest : AddWorkflowRequest
 	{
 		/// <summary>
@@ -114,6 +125,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Automation Script CICD Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 #pragma warning disable S101 // Types should be named in PascalCase
 	public class AddNugetCICDWorkflowRequest : AddWorkflowRequest
 #pragma warning restore S101 // Types should be named in PascalCase
@@ -135,6 +147,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	/// <summary>
 	/// InterApp Message that will add a new repository Internal Nuget CICD Workflow to the tracked repositories.
 	/// </summary>
+	[Obsolete(WorkflowDeprecation.Message)]
 #pragma warning disable S101 // Types should be named in PascalCase
 	public class AddInternalNugetCICDWorkflowRequest : AddWorkflowRequest
 #pragma warning restore S101 // Types should be named in PascalCase
@@ -160,6 +173,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	{
 		/// <inheritdoc/>
 		public bool Success { get; set; }
+
+		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
 
 		/// <inheritdoc/>
 		public string Description { get; set; }
@@ -206,6 +222,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Wo
 	{
 		/// <inheritdoc/>
 		public bool Success { get; set; }
+
+		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
 
 		/// <inheritdoc/>
 		public string Description { get; set; }

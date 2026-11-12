@@ -1,36 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net48</TargetFramework>
+		<TargetFramework>net462</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<AssemblyName>Skyline.DataMiner.ConnectorAPI.Github.Repositories</AssemblyName>
 		<RootNamespace>Skyline.DataMiner.ConnectorAPI.Github.Repositories</RootNamespace>
-		<Version>1.0.9</Version>
-		<PackageTags>Skyline;DataMiner</PackageTags>
-		<PackageProjectUrl>https://skyline.be</PackageProjectUrl>
+		<Version>1.2.0</Version>
+		<PackageTags>Skyline;DataMiner;ConnectorAPI;InterApp</PackageTags>
+		<PackageProjectUrl>https://github.com/SkylineCommunications/SLC-S-Github-Repositories</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/SkylineCommunications/SLC-S-Github-Repositories</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageIcon>Icon.png</PackageIcon>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>SkylineCommunications</Authors>
 		<Company>Skyline Communications</Company>
-		<Description>A Connector API (Inter-App Calls/Messages) for DataMiner elements running the 'Github Repositories' connector.</Description>
-		<Platforms>AnyCPU;x86</Platforms>
+		<Description>A Connector API (InterApp calls/messages) for DataMiner elements running the 'GitHub Repositories' connector. Lets Automation scripts and connectors create repositories, manage collaborators and topics, and add or trigger GitHub Actions workflows.
+[Minimum Required DataMiner: 10.1.11]
+[Minimum Required connector version: 1.0.0.9]
+Code Entry Point: var github = new GithubRepositories(engine.GetUserConnection(), "My GitHub Element");
+Refer to the readme for more information.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="" />
-		<None Include="LICENSE.txt" Pack="true" PackagePath="" />
 		<None Include="nuget\Icon.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Skyline.DataMiner.Core.InterAppCalls.Common" Version="1.0.1.1" />
+		<InternalsVisibleTo Include="ConnectorAPI.Tests" />
 	</ItemGroup>
 
-	<Target Name="CopyNuGetPackage" AfterTargets="Pack" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="C:\Skyline_Data\Nuget Store\$(PackageId)" />
+	<ItemGroup>
+	  <PackageReference Include="Skyline.DataMiner.Core.InterAppCalls.Common" Version="1.1.1.1" />
+	</ItemGroup>
+
+	<Target Name="CopyNuGetPackage" AfterTargets="Pack" Condition="'$(LocalNuGetStorePath)' != '' and '$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+		<Copy SourceFiles="$(PackageOutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(LocalNuGetStorePath)\$(PackageId)" />
 	</Target>
 </Project>

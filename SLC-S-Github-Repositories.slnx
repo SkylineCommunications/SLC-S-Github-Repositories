@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ConnectorAPI.Tests/ConnectorAPI.Tests.csproj" />
+  <Project Path="ConnectorAPI/ConnectorAPI.csproj" />
+</Solution>
