@@ -188,6 +188,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 
 		/// <summary>
 		/// Indicates that the repository contains a DataMiner Nuget Package.
+		/// Shares the 'S' initials with <see cref="Solution"/>, as NuGet repositories follow the Solution naming convention.
 		/// </summary>
 		[ShortDescription("S")]
 		[Description("Nuget")]

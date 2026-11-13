@@ -1,15 +1,14 @@
 # Skyline.DataMiner.ConnectorAPI.Github.Repositories
 
-## About
-
-A Connector API (Inter-App Calls/Messages) for DataMiner elements running the 'Github Repositories' connector.
-
 ## Table of Content
 
-- [About](#About-DataMiner)
-- [Installation](#Installation)
+- [About](#about)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
 
 ## About
+
+A Connector API (InterApp calls/messages) for DataMiner elements running the 'GitHub Repositories' connector.
 
 This nuget contains base classes that are used in the Github Repositories Connector, that could also be usefull in Automation scripts. 
 
@@ -30,7 +29,35 @@ A unique catalog of 7000+ connectors already exist. In addition, you can leverag
 
 At Skyline Communications, we deal in world-class solutions that are deployed by leading companies around the globe. Check out [our proven track record](https://aka.dataminer.services/about-skyline) and see how we make our customers' lives easier by empowering them to take their operations to the next level.
 
+## Getting Started
 
+Install the package, then connect to an element running the 'GitHub Repositories' connector:
+
+```csharp
+var github = new GithubRepositories(engine.GetUserConnection(), "My GitHub Element");
+
+var response = github.SendSingleResponseMessage<CreateRepositoryResponse>(
+    new CreateRepositoryRequest
+    {
+        Data = new CreateRepositoryData
+        {
+            OrganizationId = "SkylineCommunications",
+            Name = "my-new-repo",
+            Description = "Created from DataMiner",
+            Public = false,
+        },
+    });
+
+if (!response.Success)
+{
+    engine.GenerateInformation($"Create failed ({response.Status}): {response.Description}");
+}
+```
+
+### Requirements
+
+- An element running the 'GitHub Repositories' connector, version 1.0.0.9 or higher.
+- DataMiner 10.1.11 or higher.
 
 ## Installation
 

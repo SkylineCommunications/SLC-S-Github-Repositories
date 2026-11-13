@@ -35,6 +35,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 		public bool Success { get; set; }
 
 		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
+
+		/// <inheritdoc/>
 		public string Description { get; set; }
 
 		/// <inheritdoc/>
