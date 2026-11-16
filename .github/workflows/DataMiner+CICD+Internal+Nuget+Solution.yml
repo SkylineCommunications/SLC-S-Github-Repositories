@@ -14,4 +14,4 @@ jobs:
     with:
       sonarcloud-project-name: SkylineCommunications_SLC-S-Github-Repositories-Core
     secrets:
-      NUGET_API_KEY: ${{ secrets.NUGETAPIKEY_GITHUB }}
+      NUGET_API_KEY: ${{ secrets.NUGETAPIKEY }}

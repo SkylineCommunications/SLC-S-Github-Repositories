@@ -51,25 +51,94 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 
 		internal static Message ToMessage(IGithubMessage message)
 		{
-			var messageType = message?.GetType();
-			if (messageType == null || !KnownTypeMapping.ContainsKey(messageType))
+			switch (message)
 			{
-				throw new InvalidOperationException($"No InterApp mapping is registered for request type '{messageType?.FullName ?? "null"}'.");
-			}
+				case AddRepositoryRequest addRepositoryRequest:
+					return new GenericInterAppMessage<AddRepositoryRequest>(addRepositoryRequest);
 
-			return (Message)Activator.CreateInstance(typeof(GenericInterAppMessage<>).MakeGenericType(messageType), message);
+				case CreateRepositoryRequest createRepositoryRequest:
+					return new GenericInterAppMessage<CreateRepositoryRequest>(createRepositoryRequest);
+
+				case CreateRepositoryContentRequest createRepositoryContentRequest:
+					return new GenericInterAppMessage<CreateRepositoryContentRequest>(createRepositoryContentRequest);
+
+				case AddRepositoryCollaboratorRequest addRepositoryCollaboratorRequest:
+					return new GenericInterAppMessage<AddRepositoryCollaboratorRequest>(addRepositoryCollaboratorRequest);
+
+				case RemoveRepositoryRequest removeRepositoryRequest:
+					return new GenericInterAppMessage<RemoveRepositoryRequest>(removeRepositoryRequest);
+
+				case AddRepositoryTopicsRequest addRepositoryTopicsRequest:
+					return new GenericInterAppMessage<AddRepositoryTopicsRequest>(addRepositoryTopicsRequest);
+
+				case RemoveRepositoryTopicsRequest removeRepositoryTopicsRequest:
+					return new GenericInterAppMessage<RemoveRepositoryTopicsRequest>(removeRepositoryTopicsRequest);
+
+#pragma warning disable CS0618 // Deprecated workflow requests must stay supported while the connector still handles them.
+				case AddAutomationScriptCIWorkflowRequest addAutomationScriptCIWorkflowRequest:
+					return new GenericInterAppMessage<AddAutomationScriptCIWorkflowRequest>(addAutomationScriptCIWorkflowRequest);
+
+				case AddAutomationScriptCICDWorkflowRequest addAutomationScriptCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddAutomationScriptCICDWorkflowRequest>(addAutomationScriptCICDWorkflowRequest);
+
+				case AddConnectorCIWorkflowRequest addConnectorCIWorkflowRequest:
+					return new GenericInterAppMessage<AddConnectorCIWorkflowRequest>(addConnectorCIWorkflowRequest);
+
+				case AddNugetCICDWorkflowRequest addNugetCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddNugetCICDWorkflowRequest>(addNugetCICDWorkflowRequest);
+
+				case AddInternalNugetCICDWorkflowRequest addInternalNugetCICDWorkflowRequest:
+					return new GenericInterAppMessage<AddInternalNugetCICDWorkflowRequest>(addInternalNugetCICDWorkflowRequest);
+
+				case AddCustomWorkflowRequest addCustomWorkflowRequest:
+					return new GenericInterAppMessage<AddCustomWorkflowRequest>(addCustomWorkflowRequest);
+
+				case AddWorkflowRequest addWorkflowRequest:
+					return new GenericInterAppMessage<AddWorkflowRequest>(addWorkflowRequest);
+#pragma warning restore CS0618
+
+				case ExecuteWorkflowRequest executeWorkflowRequest:
+					return new GenericInterAppMessage<ExecuteWorkflowRequest>(executeWorkflowRequest);
+
+				default:
+					throw new InvalidOperationException($"No InterApp mapping is registered for request type '{message?.GetType().FullName ?? "null"}'.");
+			}
 		}
 
 		internal static IGithubResponse FromMessage(Message message)
 		{
-			var messageType = message?.GetType();
-			if (messageType == null || !KnownTypes.Contains(messageType)
-				|| !(messageType.GetProperty(nameof(GenericInterAppMessage<IGithubMessage>.Data)).GetValue(message) is IGithubResponse response))
+			switch (message)
 			{
-				throw new InvalidOperationException($"No InterApp response mapping is registered for message type '{messageType?.FullName ?? "null"}'.");
-			}
+				case GenericInterAppMessage<AddRepositoryResponse> addRepositoryResponse:
+					return addRepositoryResponse.Data;
 
-			return response;
+				case GenericInterAppMessage<CreateRepositoryResponse> createRepositoryResponse:
+					return createRepositoryResponse.Data;
+
+				case GenericInterAppMessage<CreateRepositoryContentResponse> createRepositoryContentResponse:
+					return createRepositoryContentResponse.Data;
+
+				case GenericInterAppMessage<AddRepositoryCollaboratorResponse> addRepositoryCollaboratorResponse:
+					return addRepositoryCollaboratorResponse.Data;
+
+				case GenericInterAppMessage<RemoveRepositoryResponse> removeRepositoryResponse:
+					return removeRepositoryResponse.Data;
+
+				case GenericInterAppMessage<AddRepositoryTopicsResponse> addRepositoryTopicsResponse:
+					return addRepositoryTopicsResponse.Data;
+
+				case GenericInterAppMessage<RemoveRepositoryTopicsResponse> removeRepositoryTopicsResponse:
+					return removeRepositoryTopicsResponse.Data;
+
+				case GenericInterAppMessage<AddWorkflowResponse> addWorkflowResponse:
+					return addWorkflowResponse.Data;
+
+				case GenericInterAppMessage<ExecuteWorkflowResponse> executeWorkflowResponse:
+					return executeWorkflowResponse.Data;
+
+				default:
+					throw new InvalidOperationException($"No InterApp response mapping is registered for message type '{message?.GetType().FullName ?? "null"}'.");
+			}
 		}
 	}
 }
