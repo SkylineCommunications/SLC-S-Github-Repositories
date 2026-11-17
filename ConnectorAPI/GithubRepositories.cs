@@ -15,7 +15,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 
 
 	/// <summary>
-	/// Represents a DataMiner element using the 'Skyline Example InterAppCalls' connector, that can handle InterApp Messages.
+	/// Represents a DataMiner element running the 'GitHub Repositories' connector, that can handle InterApp Messages.
 	/// </summary>
 	public class GithubRepositories
 	{
@@ -135,7 +135,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <param name="messages">The messages that need to be send.</param>
 		public void SendMessageNoResponse(params IGithubRequest[] messages)
 		{
-			if(!CheckVersion(out var description))
+			if(!CheckVersion(ProtocolVersion, out var description))
 			{
 				throw new InvalidVersionException(description);
 			}
@@ -154,7 +154,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <returns>The response coming from the device</returns>
 		public IEnumerable<IGithubResponse> SendMessages(IGithubRequest[] messages, TimeSpan timeout = default)
 		{
-			if (!CheckVersion(out var description))
+			if (!CheckVersion(ProtocolVersion, out var description))
 			{
 				var returnMessages = new List<IGithubResponse>();
 				foreach(var message in messages)
@@ -164,6 +164,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 					responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
 					responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
 					responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+					responseType.GetProperty(nameof(IGithubResponse.Status)).SetValue(response, GithubResponseStatus.UnsupportedConnectorVersion);
 					returnMessages.Add((IGithubResponse)response);
 				}
 				
@@ -191,13 +192,14 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		/// <returns>The response coming from the device</returns>
 		public IGithubResponse SendSingleResponseMessage(IGithubRequest message, TimeSpan timeout = default)
 		{
-			if (!CheckVersion(out var description))
+			if (!CheckVersion(ProtocolVersion, out var description))
 			{
 				var responseType = Types.KnownTypeMapping[message.GetType()];
 				var response = Activator.CreateInstance(responseType);
 				responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
 				responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
 				responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+				responseType.GetProperty(nameof(IGithubResponse.Status)).SetValue(response, GithubResponseStatus.UnsupportedConnectorVersion);
 				return (IGithubResponse)response;
 			}
 
@@ -223,13 +225,14 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 		public T SendSingleResponseMessage<T>(IGithubRequest message, TimeSpan timeout = default)
 			where T : IGithubResponse
 		{
-			if (!CheckVersion(out var description))
+			if (!CheckVersion(ProtocolVersion, out var description))
 			{
 				var responseType = typeof(T);
 				var response = Activator.CreateInstance(typeof(T));
 				responseType.GetProperty(nameof(IGithubResponse.Request)).SetValue(response, message);
 				responseType.GetProperty(nameof(IGithubResponse.Description)).SetValue(response, description);
 				responseType.GetProperty(nameof(IGithubResponse.Success)).SetValue(response, false);
+				responseType.GetProperty(nameof(IGithubResponse.Status)).SetValue(response, GithubResponseStatus.UnsupportedConnectorVersion);
 				return (T)response;
 			}
 
@@ -246,16 +249,15 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 			return (T)Types.FromMessage(internalResult);
 		}
 
-		internal bool CheckVersion(out string description)
-		{
-			description = String.Empty;
-			var versionCheck = ProtocolVersion.Seq >= 9 || ProtocolVersion.Major >= 1 || ProtocolVersion.Branch >= 2 || ProtocolVersion.FW >= 1;
-			if (!versionCheck)
-			{
-				description = $"The element should be running at least version 1.0.0.9 or higher, to use this nuget package.";
-			}
+		private static readonly Version MinimumProtocolVersion = new Version(1, 0, 0, 9);
 
-			return versionCheck;
+		internal static bool CheckVersion(ProtocolVersion protocolVersion, out string description)
+		{
+			var current = new Version(protocolVersion.Branch, protocolVersion.FW, protocolVersion.Major, protocolVersion.Seq);
+			description = current < MinimumProtocolVersion
+				? $"The element is running connector version {current}, but version {MinimumProtocolVersion} or higher is required by this NuGet package."
+				: String.Empty;
+			return description.Length == 0;
 		}
 	}
 }

@@ -31,6 +31,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 		public bool Success { get; set; }
 
 		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
+
+		/// <inheritdoc/>
 		public string Description { get; set; }
 
 		/// <inheritdoc/>
@@ -62,6 +65,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 		public bool Success { get; set; }
 
 		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
+
+		/// <inheritdoc/>
 		public string Description { get; set; }
 
 		/// <inheritdoc/>
@@ -91,6 +97,9 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages.Re
 
 		/// <inheritdoc/>
 		public bool Success { get; set; }
+
+		/// <inheritdoc/>
+		public GithubResponseStatus Status { get; set; }
 
 		/// <inheritdoc/>
 		public string Description { get; set; }

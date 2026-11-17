@@ -1,0 +1,15 @@
+name: DataMiner CICD NuGet Solution
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+jobs:
+  CICD:
+    uses: SkylineCommunications/_ReusableWorkflows/.github/workflows/Master Workflow.yml@main
+    with:
+      sonarcloud-project-name: SkylineCommunications_SLC-S-Github-Repositories-Core
+      nuget-push-source: https://api.nuget.org/v3/index.json
+
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGETAPIKEY }}

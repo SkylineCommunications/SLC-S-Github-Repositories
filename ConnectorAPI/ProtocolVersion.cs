@@ -11,7 +11,7 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories
 	public class ProtocolVersion
 	{
 		private readonly string[] versioning = new string[5];
-		private const string Pattern = @"^(?<branch>\d+).(?<fw>\d+).(?<major>\d+).(?<seq>\d+)(?<suffix>.*)$";
+		private const string Pattern = @"^(?<branch>\d+)\.(?<fw>\d+)\.(?<major>\d+)\.(?<seq>\d+)(?<suffix>.*)$";
 
 		/// <summary>
 		/// Initialize a new instance of the <see cref="ProtocolVersion"/> class by parsing the connector version string.

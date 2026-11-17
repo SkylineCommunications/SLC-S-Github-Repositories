@@ -41,6 +41,57 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 	}
 
 	/// <summary>
+	/// Machine-readable classification of the outcome of an InterApp Call.
+	/// </summary>
+	public enum GithubResponseStatus
+	{
+		/// <summary>
+		/// The outcome was not classified, for example because the connector does not support this field yet.
+		/// </summary>
+		Unknown = 0,
+
+		/// <summary>
+		/// The request was handled successfully.
+		/// </summary>
+		Success,
+
+		/// <summary>
+		/// The requested resource does not exist.
+		/// </summary>
+		NotFound,
+
+		/// <summary>
+		/// The resource that should be created already exists.
+		/// </summary>
+		AlreadyExists,
+
+		/// <summary>
+		/// The configured credentials lack the permissions required for the request.
+		/// </summary>
+		PermissionDenied,
+
+		/// <summary>
+		/// The GitHub API rate limit was hit. The request can be retried later.
+		/// </summary>
+		RateLimited,
+
+		/// <summary>
+		/// The request contains invalid or missing data.
+		/// </summary>
+		InvalidRequest,
+
+		/// <summary>
+		/// The connector failed to handle the request.
+		/// </summary>
+		ConnectorError,
+
+		/// <summary>
+		/// The element runs a connector version that is not supported by this NuGet package.
+		/// </summary>
+		UnsupportedConnectorVersion,
+	}
+
+	/// <summary>
 	/// Base class that hold default properties that every response has.
 	/// </summary>
 	public interface IGithubResponse : IGithubMessage
@@ -49,6 +100,11 @@ namespace Skyline.DataMiner.ConnectorAPI.Github.Repositories.InterAppMessages
 		/// Indicates if the InterApp Call was successful or not
 		/// </summary>
 		bool Success { get; set; }
+
+		/// <summary>
+		/// A machine-readable classification of the outcome of the InterApp Call.
+		/// </summary>
+		GithubResponseStatus Status { get; set; }
 
 		/// <summary>
 		/// A human readable text representing the response of the InterApp Call.
